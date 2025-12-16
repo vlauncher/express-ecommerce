@@ -8,7 +8,12 @@
     "build": "rimraf dist && tsc",
     "start": "node dist/server.js",
     "lint": "eslint . --ext .ts",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "db:migrate": "sequelize-cli db:migrate",
+    "db:migrate:undo": "sequelize-cli db:migrate:undo",
+    "db:migrate:undo:all": "sequelize-cli db:migrate:undo:all",
+    "db:seed": "sequelize-cli db:seed:all",
+    "db:seed:undo": "sequelize-cli db:seed:undo:all"
   },
   "repository": {
     "type": "git",
@@ -28,7 +33,9 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
-    "helmet": "^8.1.0"
+    "helmet": "^8.1.0",
+    "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@types/compression": "^1.8.1",
@@ -43,6 +50,7 @@
     "eslint-plugin-prettier": "^5.5.4",
     "prettier": "^3.7.4",
     "rimraf": "^6.1.2",
+    "sequelize-cli": "^6.6.3",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
