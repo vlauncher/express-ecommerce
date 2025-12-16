@@ -9,6 +9,7 @@ describe('Models', () => {
         email: 'test@example.com',
         password: 'password',
         is_verified: false,
+        role: 'CUSTOMER', // Added default role
       });
 
       expect(user.email).toBe('test@example.com');
@@ -22,6 +23,7 @@ describe('Models', () => {
         email: 'invalid-email',
         password: 'password',
         is_verified: false,
+        role: 'CUSTOMER', // Added default role
       });
 
       try {

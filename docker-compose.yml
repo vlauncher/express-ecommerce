@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:alpine
+    container_name: ecommerce_redis_v2
+    ports:
+      - "6380:6379"
+    restart: always
+
+  app:
+    build: .
+    container_name: ecommerce_app_v2
+    ports:
+      - "8000:8000"
+    environment:
+      # DATABASE_URL should be set in the deployment environment (e.g., K8s secrets, Docker swarm secrets, or a .env file for docker-compose up)
+      # For local docker-compose testing, you might put it in a .env file that docker-compose automatically loads.
+      DATABASE_URL: ${DATABASE_URL}
+      NODE_ENV: production
+      PORT: 8000
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      EMAIL_HOST_USER: ${EMAIL_HOST_USER}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+    depends_on:
+      - redis
+    restart: always
+
+volumes:
+  # No postgres_data volume needed as DB is external

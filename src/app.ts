@@ -3,6 +3,8 @@ import helmet from 'helmet';
 import cors from 'cors';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
+import { resolveTenant } from './middlewares/resolveTenant'; // Import resolveTenant
+import { authenticate } from './middlewares/authenticate.middleware'; // Import authenticate
 import routes from './routes';
 import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
@@ -20,6 +22,12 @@ app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// Tenant Resolution Middleware - MUST come before routes
+app.use(resolveTenant);
+
+// Authentication Middleware - MUST come after tenant resolution if user is store-specific
+app.use(authenticate);
 
 // Documentation
 const swaggerDocument = yaml.load(path.join(__dirname, '../swagger.yml'));

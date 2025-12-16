@@ -1,4 +1,9 @@
 import User from './User';
 import Otp from './Otp';
+import Store from './Store';
 
-export { User, Otp };
+// Associations
+Store.hasMany(User, { foreignKey: 'storeId', as: 'users' });
+User.belongsTo(Store, { foreignKey: 'storeId', as: 'store' });
+
+export { User, Otp, Store };

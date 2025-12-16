@@ -28,6 +28,7 @@ export class AuthService {
       email,
       password: hashedPassword,
       is_verified: false,
+      role: 'CUSTOMER', // Default role for new registrations
     });
 
     await this.generateAndSendOtp(user.email);

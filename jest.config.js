@@ -18,4 +18,7 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
+  // Ensure .env is loaded for tests, specifically for JWT secrets.
+  // The setup.ts now handles loading .env.test and .env
+  setupFiles: [], 
 };

@@ -87,7 +87,14 @@ describe('Auth Integration', () => {
         .post('/api/v1/auth/login')
         .send({ email: userData.email, password: userData.password });
     
-    expect(res.status).toBe(401); // 401 because error thrown in service is caught and mapped to 401 in controller for login
-    // Actually controller maps login error to 401. Service throws "Account not verified".
+    expect(res.status).toBe(401);
+  });
+
+  it('should deny access to /profile if not authenticated', async () => {
+    const res = await request(app)
+      .get('/api/v1/auth/profile');
+    
+    expect(res.status).toBe(401);
+    expect(res.body.message).toBe('Authentication required');
   });
 });
