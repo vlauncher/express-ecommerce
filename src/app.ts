@@ -64,10 +64,11 @@ app.use((_req: Request, res: Response) => {
 });
 
 // Global Error Handler
-app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     console.error(err.stack);
-    res.status(500).json({
-        message: 'Internal Server Error',
+    const status = err.status || err.statusCode || 500;
+    res.status(status).json({
+        message: status === 500 ? 'Internal Server Error' : err.message,
         error: process.env.NODE_ENV === 'development' ? err.message : undefined,
     });
 });
