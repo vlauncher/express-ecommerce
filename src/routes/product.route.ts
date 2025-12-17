@@ -2,12 +2,13 @@ import express from 'express';
 import * as ProductController from '../controllers/product.controller';
 import { authorize } from '../middlewares/authorize.middleware';
 import { upload } from '../middlewares/upload.middleware';
+import { cacheResponse } from '../middlewares/cache.middleware';
 
 const router = express.Router();
 
 // Public
-router.get('/', ProductController.getProducts);
-router.get('/:id', ProductController.getProductById);
+router.get('/', cacheResponse(300), ProductController.getProducts);
+router.get('/:id', cacheResponse(300), ProductController.getProductById);
 
 // Protected (Admin)
 router.post('/', authorize(['STORE_ADMIN']), upload.single('image'), ProductController.createProduct);

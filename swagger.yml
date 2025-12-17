@@ -428,6 +428,40 @@ paths:
         '200':
           description: Server is healthy
 
+  /stores:
+    get:
+      summary: Get all stores (Super Admin only)
+      tags: [Stores]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of stores
+    post:
+      summary: Create a new store (Super Admin only)
+      tags: [Stores]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - slug
+              properties:
+                name:
+                  type: string
+                slug:
+                  type: string
+                domain:
+                  type: string
+      responses:
+        '201':
+          description: Store created
+
   /categories:
     get:
       summary: Get all categories
@@ -843,3 +877,36 @@ paths:
       responses:
         '200':
           description: Webhook received
+
+  /analytics/sales:
+    get:
+      summary: Get sales statistics
+      tags: [Analytics]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/TenantIdHeader'
+      responses:
+        '200':
+          description: Sales statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalRevenue:
+                    type: number
+                  totalOrders:
+                    type: integer
+
+  /analytics/top-products:
+    get:
+      summary: Get top selling products
+      tags: [Analytics]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/TenantIdHeader'
+      responses:
+        '200':
+          description: Top products list

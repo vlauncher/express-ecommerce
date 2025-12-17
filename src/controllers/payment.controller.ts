@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { PaymentService } from '../services/payment.service';
 import { Order, OrderStatus } from '../models';
+import { emailQueue } from '../jobs/email.queue';
 
 export const handlePaystackWebhook = async (req: Request, res: Response) => {
     // Validate event
@@ -47,6 +48,20 @@ export const handlePaystackWebhook = async (req: Request, res: Response) => {
                      // Check if amount paid matches (Paystack amount is in kobo)
                      await order.update({ status: OrderStatus.PAID });
                      console.log(`Order ${order.id} marked as PAID`);
+                     
+                     // Send Confirmation Email
+                     if (data.customer && data.customer.email) {
+                         await emailQueue.add('order-confirmation', {
+                             type: 'generic',
+                             data: {
+                                 to: data.customer.email,
+                                 subject: `Order Confirmation #${order.id}`,
+                                 text: `Thank you for your order! Your payment of ${order.totalAmount} was successful.`,
+                                 html: `<h1>Order Confirmed</h1><p>Order ID: ${order.id}</p><p>Total Paid: ${order.totalAmount}</p>`
+                             }
+                         });
+                     }
+
                 } else {
                     console.warn(`Order ${order.id} payment mismatch: paid ${data.amount/100}, expected ${order.totalAmount}`);
                 }

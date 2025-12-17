@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { User, Otp } from '../models';
 import { emailService } from './email.service';
+import { emailQueue } from '../jobs/email.queue';
 import { Op } from 'sequelize';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
@@ -129,7 +130,10 @@ export class AuthService {
       expiresAt,
     });
 
-    await emailService.sendOtp(email, otp);
+    await emailQueue.add('send-otp', {
+      type: 'otp',
+      data: { to: email, otp }
+    });
   }
 
   private generateTokens(user: User) {

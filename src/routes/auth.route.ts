@@ -2,12 +2,14 @@ import { Router } from 'express';
 import { authController } from '../controllers/auth.controller';
 import { authenticate } from '../middlewares/authenticate.middleware';
 import { authorize } from '../middlewares/authorize.middleware';
+import { validate } from '../middlewares/validate.middleware';
+import { registerSchema, loginSchema, verifyOtpSchema } from '../validations/auth.validation';
 
 const router = Router();
 
-router.post('/register', (req, res) => authController.register(req, res));
-router.post('/verify-otp', (req, res) => authController.verifyOtp(req, res));
-router.post('/login', (req, res) => authController.login(req, res));
+router.post('/register', validate(registerSchema), (req, res) => authController.register(req, res));
+router.post('/verify-otp', validate(verifyOtpSchema), (req, res) => authController.verifyOtp(req, res));
+router.post('/login', validate(loginSchema), (req, res) => authController.login(req, res));
 router.post('/refresh-token', (req, res) => authController.refreshToken(req, res));
 router.post('/resend-otp', (req, res) => authController.resendOtp(req, res));
 
